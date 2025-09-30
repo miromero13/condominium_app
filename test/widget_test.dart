@@ -16,8 +16,8 @@ void main() {
   testWidgets('User type selection screen displays correctly', (WidgetTester tester) async {
     // Test the user type selection screen directly
     await tester.pumpWidget(
-      MaterialApp(
-        home: const UserTypeSelectionScreen(),
+      const MaterialApp(
+        home: UserTypeSelectionScreen(),
       ),
     );
 
@@ -38,8 +38,8 @@ void main() {
   testWidgets('Login form screen displays correctly', (WidgetTester tester) async {
     // Test the login form screen directly
     await tester.pumpWidget(
-      MaterialApp(
-        home: const LoginFormScreen(
+      const MaterialApp(
+        home: LoginFormScreen(
           userRole: UserRole.admin,
           roleTitle: 'Administrador',
           roleColor: Colors.blue,
@@ -63,8 +63,8 @@ void main() {
   testWidgets('Can enter text in login form fields', (WidgetTester tester) async {
     // Test text input in login form
     await tester.pumpWidget(
-      MaterialApp(
-        home: const LoginFormScreen(
+      const MaterialApp(
+        home: LoginFormScreen(
           userRole: UserRole.admin,
           roleTitle: 'Administrador',
           roleColor: Colors.blue,
@@ -93,8 +93,8 @@ void main() {
   testWidgets('Form validation works', (WidgetTester tester) async {
     // Test form validation
     await tester.pumpWidget(
-      MaterialApp(
-        home: const LoginFormScreen(
+      const MaterialApp(
+        home: LoginFormScreen(
           userRole: UserRole.admin,
           roleTitle: 'Administrador',
           roleColor: Colors.blue,
