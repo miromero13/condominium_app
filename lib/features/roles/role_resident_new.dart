@@ -56,27 +56,37 @@ class _RoleResidentState extends State<RoleResident> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Portal del Residente',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            
             if (_isLoading)
-              _buildLoadingCard()
+              _buildLoadingSkeleton()
             else if (_error != null)
               _buildErrorCard()
             else if (_dashboardInfo == null)
               _buildNoPropertyCard()
-            else ...[
+            else
               _buildPropertyInfo(),
-              const SizedBox(height: 24),
               
-              // Estadísticas rápidas
+            const SizedBox(height: 24),
+            
+            // Estadísticas rápidas
+            if (_dashboardInfo != null && !_isLoading) ...[
               _buildStatsRow(),
               const SizedBox(height: 24),
-              
-              // Información de próximo pago si existe
-              if (_dashboardInfo?.paymentStats.hasPendingPayments ?? false) ...[
-                _buildSectionTitle('Próximo Pago'),
-                const SizedBox(height: 12),
-                _buildNextPaymentCard(),
-                const SizedBox(height: 24),
-              ],
+            ],
+            
+            // Información de próximo pago si existe
+            if (_dashboardInfo?.paymentStats.hasPendingPayments ?? false) ...[
+              _buildSectionTitle('Próximo Pago'),
+              const SizedBox(height: 12),
+              _buildNextPaymentCard(),
+              const SizedBox(height: 24),
             ],
           ],
         ),
@@ -84,99 +94,93 @@ class _RoleResidentState extends State<RoleResident> {
     );
   }
 
-  Widget _buildLoadingCard() {
+  Widget _buildLoadingSkeleton() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Property card skeleton
+        // Skeleton para la información de la propiedad
         CustomCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row skeleton
+              // Header con icono y título
               Row(
                 children: [
-                  _buildShimmerBox(24, 24),
+                  _buildShimmerBox(width: 24, height: 24, borderRadius: 4),
                   const SizedBox(width: 8),
-                  _buildShimmerBox(120, 20),
+                  _buildShimmerBox(width: 120, height: 16, borderRadius: 4),
                   const Spacer(),
-                  _buildShimmerBox(80, 24),
+                  _buildShimmerBox(width: 80, height: 20, borderRadius: 10),
                 ],
               ),
               const SizedBox(height: 16),
               
-              // Property name skeleton
-              _buildShimmerBox(double.infinity, 24),
+              // Nombre de la propiedad
+              _buildShimmerBox(width: 200, height: 24, borderRadius: 4),
               const SizedBox(height: 12),
               
-              // Address skeleton
-              Row(
-                children: [
-                  _buildShimmerBox(16, 16),
-                  const SizedBox(width: 8),
-                  _buildShimmerBox(80, 16),
-                  const SizedBox(width: 8),
-                  Expanded(child: _buildShimmerBox(double.infinity, 16)),
-                ],
-              ),
+              // Detalles de la propiedad
+              _buildDetailRowSkeleton(),
               const SizedBox(height: 8),
-              
-              // Role skeleton
-              Row(
-                children: [
-                  _buildShimmerBox(16, 16),
-                  const SizedBox(width: 8),
-                  _buildShimmerBox(40, 16),
-                  const SizedBox(width: 8),
-                  _buildShimmerBox(100, 16),
-                ],
-              ),
+              _buildDetailRowSkeleton(),
+              const SizedBox(height: 8),
+              _buildDetailRowSkeleton(),
             ],
           ),
         ),
+        
         const SizedBox(height: 24),
         
-        // Stats skeleton
+        // Skeleton para las estadísticas
         Row(
           children: [
-            Expanded(child: _buildStatSkeleton()),
+            Expanded(child: _buildStatCardSkeleton()),
             const SizedBox(width: 12),
-            Expanded(child: _buildStatSkeleton()),
+            Expanded(child: _buildStatCardSkeleton()),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildShimmerBox(double width, double height) {
-    return Container(
-      width: width == double.infinity ? null : width,
-      height: height,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.grey[300]!,
-            Colors.grey[200]!,
-            Colors.grey[300]!,
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+  Widget _buildDetailRowSkeleton() {
+    return Row(
+      children: [
+        _buildShimmerBox(width: 16, height: 16, borderRadius: 4),
+        const SizedBox(width: 8),
+        _buildShimmerBox(width: 60, height: 14, borderRadius: 4),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _buildShimmerBox(width: double.infinity, height: 14, borderRadius: 4),
         ),
-        borderRadius: BorderRadius.circular(4),
+      ],
+    );
+  }
+
+  Widget _buildStatCardSkeleton() {
+    return CustomCard(
+      child: Column(
+        children: [
+          _buildShimmerBox(width: 24, height: 24, borderRadius: 4),
+          const SizedBox(height: 8),
+          _buildShimmerBox(width: 32, height: 28, borderRadius: 4),
+          const SizedBox(height: 4),
+          _buildShimmerBox(width: 80, height: 12, borderRadius: 4),
+        ],
       ),
     );
   }
 
-  Widget _buildStatSkeleton() {
-    return CustomCard(
-      child: Column(
-        children: [
-          _buildShimmerBox(24, 24),
-          const SizedBox(height: 8),
-          _buildShimmerBox(40, 24),
-          const SizedBox(height: 4),
-          _buildShimmerBox(80, 14),
-        ],
+  Widget _buildShimmerBox({
+    required double width,
+    required double height,
+    double borderRadius = 8,
+  }) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        color: Colors.grey[300],
       ),
     );
   }

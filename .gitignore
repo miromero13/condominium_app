@@ -45,9 +45,37 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/app/.cxx
+
+# Environment files
 *.env
-/linux/
+.env
+.env.local
+.env.production
+
+# iOS specific ignores
+ios/Pods/
+ios/Podfile.lock
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+
+# Android specific ignores
+android/.gradle/
+android/app/src/main/java/io/flutter/
+android/gradle.properties
+android/local.properties
+
+# macOS (since you mentioned it in gitignore)
 /macos/
+
+# Linux (since you mentioned it in gitignore)  
+/linux/
+
+# Windows
+/windows/
 /windows/
 
 # FVM Version Cache

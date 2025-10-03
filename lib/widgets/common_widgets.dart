@@ -128,6 +128,7 @@ class ShadcnButton extends StatelessWidget {
   final double? width;
   final double height;
   final bool outline;
+  final bool compact;
 
   const ShadcnButton({
     super.key,
@@ -140,16 +141,18 @@ class ShadcnButton extends StatelessWidget {
     this.width,
     this.height = 44,
     this.outline = false,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final bgColor = backgroundColor ?? const Color(0xFF18181B); // light-action
     final fgColor = textColor ?? Colors.white;
+    final buttonHeight = compact ? 36.0 : height;
 
     return SizedBox(
-      width: width ?? double.infinity,
-      height: height,
+      width: compact ? null : (width ?? double.infinity),
+      height: buttonHeight,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -166,6 +169,9 @@ class ShadcnButton extends StatelessWidget {
               ? Colors.transparent
               : const Color(0xFFF4F4F5), // light-bg-secondary
           disabledForegroundColor: const Color(0xFF71717A), // light-text-secondary
+          padding: compact 
+              ? const EdgeInsets.symmetric(horizontal: 12, vertical: 6)
+              : null,
         ),
         child: isLoading
             ? SizedBox(
@@ -179,16 +185,16 @@ class ShadcnButton extends StatelessWidget {
                 ),
               )
             : Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: compact ? MainAxisSize.min : MainAxisSize.min,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, size: 16),
-                    const SizedBox(width: 8),
+                    Icon(icon, size: compact ? 14 : 16),
+                    SizedBox(width: compact ? 6 : 8),
                   ],
                   Text(
                     text,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: compact ? 12 : 14,
                       fontWeight: FontWeight.w500,
                       color: outline ? bgColor : fgColor,
                     ),
@@ -207,6 +213,7 @@ class CustomCard extends StatelessWidget {
   final Color? backgroundColor;
   final double? elevation;
   final BorderRadius? borderRadius;
+  final VoidCallback? onTap;
 
   const CustomCard({
     super.key,
@@ -216,11 +223,12 @@ class CustomCard extends StatelessWidget {
     this.backgroundColor,
     this.elevation,
     this.borderRadius,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget content = Container(
       margin: margin,
       child: Card(
         color: backgroundColor,
@@ -234,6 +242,16 @@ class CustomCard extends StatelessWidget {
         ),
       ),
     );
+
+    if (onTap != null) {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: borderRadius ?? BorderRadius.circular(12),
+        child: content,
+      );
+    }
+
+    return content;
   }
 }
 

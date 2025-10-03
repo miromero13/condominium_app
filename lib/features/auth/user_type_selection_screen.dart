@@ -23,16 +23,9 @@ class UserTypeSelectionScreen extends StatelessWidget {
               
               // Opciones de usuario
               Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      'Selecciona tu tipo de acceso',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF09090B), // light-text-primary
-                      ),
-                    ),
-                    const SizedBox(height: 40),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
                     
                     // Tarjetas de roles
                     _buildUserTypeCard(
@@ -64,6 +57,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                       UserRole.visitor,
                     ),
                   ],
+                ),
                 ),
               ),
             ],

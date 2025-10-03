@@ -5,6 +5,8 @@ import '../roles/role_admin.dart';
 import '../roles/role_resident.dart';
 import '../roles/role_visitor.dart';
 import '../roles/role_guest.dart';
+import '../payments/payments_screen.dart';
+import '../common_areas/common_areas_screen.dart';
 import '../../widgets/common_widgets.dart';
 
 class AuthenticatedLayout extends StatefulWidget {
@@ -63,8 +65,8 @@ class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
       case 'resident':
         _roleWidgets = {
           'resident': const RoleResident(),
-          'payments': const Center(child: Text('Mis Pagos\n(Próximamente)')),
-          'services': const Center(child: Text('Servicios\n(Próximamente)')),
+          'payments': const PaymentsScreen(),
+          'services': const CommonAreasScreen(),
         };
         _navigationItems = [
           const BottomNavigationBarItem(
@@ -76,8 +78,8 @@ class _AuthenticatedLayoutState extends State<AuthenticatedLayout> {
             label: 'Pagos',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.room_service),
-            label: 'Extras',
+            icon: Icon(Icons.location_city),
+            label: 'Áreas',
           ),
         ];
         break;

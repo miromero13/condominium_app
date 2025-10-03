@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/services/auth_service.dart';
+import '../../core/services/stripe_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,21 +15,41 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuthStatus();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    try {
+      // Simular tiempo de carga mínimo
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+
+      // Reintentar inicialización de Stripe si falló
+      if (!StripeService.isInitialized) {
+        await StripeService.retryInitialization();
+      }
+
+      // Continuar con verificación de autenticación
+      await _checkAuthStatus();
+    } catch (e) {
+      debugPrint("SplashScreen: Error en inicialización - $e");
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    }
   }
 
   Future<void> _checkAuthStatus() async {
-    // Simular tiempo de carga
-    await Future.delayed(const Duration(seconds: 2));
-
     if (!mounted) return;
 
     try {
       final isLoggedIn = await _authService.isLoggedIn();
       
       if (isLoggedIn) {
-        // Validar token con el backend
-        final isValidToken = await _authService.validateToken();
+        // Validar token con el backend con timeout
+        final isValidToken = await _authService.validateToken()
+            .timeout(const Duration(seconds: 5));
         
         if (isValidToken && mounted) {
           Navigator.of(context).pushReplacementNamed('/home');
@@ -39,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.of(context).pushReplacementNamed('/login');
       }
     } catch (e) {
+      debugPrint("SplashScreen: Error en autenticación - $e");
       // En caso de error, ir al login
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/login');
